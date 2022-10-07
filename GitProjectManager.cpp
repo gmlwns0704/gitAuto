@@ -75,13 +75,13 @@ BOOL CGitProjectManagerApp::InitInstance()
 	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/Resource.h"));
 	selfBackup.gitUpload();
 
-	GitUploader sample(
-		_T("C:/Users/user/source/repos/HelloMFC"),
-		_T("sample"),
-		_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
-		_T("https://github.com/gmlwns0704/gitAuto"));
-	sample.addFile(_T("C:/Users/user/source/repos/HelloMFC/HelloMFC.cpp"));
-	sample.gitUpload();
+	//GitUploader sample(
+	//	_T("C:/Users/user/source/repos/HelloMFC"),
+	//	_T("sample"),
+	//	_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
+	//	_T("https://github.com/gmlwns0704/gitAuto"));
+	//sample.addFile(_T("C:/Users/user/source/repos/HelloMFC/HelloMFC.cpp"));
+	//sample.gitUpload();
 
 	//dataFileManager::projList.push_back(&selfBackup);
 	//dataFileManager::projList.push_back(&sample);
