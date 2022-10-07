@@ -50,16 +50,3 @@ BOOL GitUploader::gitUpload() {
 void GitUploader::addFile(CString filePath) {
 	filePathArr.Add(filePath);
 }
-
-char* GitUploader::projInfo2charP() { //해당 프로젝트 업로더 클래스의 정보를 char*로 변환하여 리턴, 별도의 free필요
-	CString infoStr =
-		projName + _T("\n") +
-		dirPath + _T("\n") +
-		toolPath + _T("\n") +
-		backupRepo + _T("\n");
-	for (int i = 0; i < filePathArr.GetCount(); i++) {
-		infoStr += filePathArr[i] + _T("\n");
-	}
-
-	return CString2charP(infoStr);
-}
