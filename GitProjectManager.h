@@ -19,7 +19,6 @@ class CGitProjectManagerApp : public CWinApp
 public:
 	CGitProjectManagerApp() noexcept;
 
-
 // 재정의입니다.
 public:
 	virtual BOOL InitInstance();

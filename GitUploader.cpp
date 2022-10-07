@@ -1,21 +1,6 @@
 #include "pch.h"
 #include "GitUploader.h"
 
-void CString2charP(CString cstr, char* str) { //CString을 char*로 변환
-	for (int i = 0; i < cstr.GetLength(); i++) {
-		str[i] = cstr.GetAt(i);
-		//printf("%c", cstr.GetAt(i));
-	}
-	str[cstr.GetLength()] = '\0';
-}
-
-void CString2system(CString cstr) { //CString을 system함수에 입력함
-	char* str = (char*)malloc(cstr.GetLength() + 1);
-	CString2charP(cstr, str);
-	system(str);
-	free(str);
-}
-
 //업로더 클래스 생성자, 하나의 프로젝트에 하나의 오브젝트
 GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) {
 	GitUploader::dirPath = dirPath; //프로젝트 디렉토리의 경로
@@ -24,6 +9,8 @@ GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CS
 	GitUploader::backupRepo = backupRepo; //업로드될 깃허브의 링크
 
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
+
+	GitUploader::projList.Add(this);
 }
 
 //해당 프로젝트에서 파일리스트의 파일을 업로드 - 일단 작동함!!!
@@ -63,7 +50,6 @@ void GitUploader::addFile(CString filePath) {
 }
 
 char* GitUploader::projInfo2charP() { //해당 프로젝트 업로더 클래스의 정보를 char*로 변환하여 리턴, 별도의 free필요
-	char* result;
 	CString infoStr =
 		projName + _T("\n") +
 		dirPath + _T("\n") +
@@ -73,8 +59,5 @@ char* GitUploader::projInfo2charP() { //해당 프로젝트 업로더 클래스의 정보를 cha
 		infoStr += filePathArr[i] + _T("\n");
 	}
 
-	result = (char*)malloc(infoStr.GetLength() + 1);
-	CString2charP(infoStr, result);
-
-	return result;
+	return CString2charP(infoStr);
 }

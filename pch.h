@@ -11,5 +11,11 @@
 #include "framework.h"
 #include "GitUploader.h"
 #include "dataFileManager.h"
+#include "initFileManager.h"
+
+char* CString2charP(CString cstr);
+void CString2system(CString cstr);
+
+GitUploader* GitUploaderList;
 
 #endif //PCH_H

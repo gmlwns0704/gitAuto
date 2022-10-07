@@ -8,9 +8,11 @@
 #include "afxdialogex.h"
 #include "GitProjectManager.h"
 #include "MainFrm.h"
+#include "resource.h"
 
 #include "GitUploader.h"
 #include "dataFileManager.h"
+#include "newUploaderFrame.h"
 
 
 #ifdef _DEBUG
@@ -41,7 +43,6 @@ CGitProjectManagerApp::CGitProjectManagerApp() noexcept
 // 유일한 CGitProjectManagerApp 개체입니다.
 
 CGitProjectManagerApp theApp;
-GitUploader* GitUploaderList;
 
 
 // CGitProjectManagerApp 초기화
@@ -52,8 +53,11 @@ BOOL CGitProjectManagerApp::InitInstance()
 
 
 	//***임시테스트***//
+	//******//
+	//Init불러오기***//
+	initFileManager::loadInit();
 	//***이 프로젝트 스스로를 깃허브에 업로드 및 프로젝트 정보를 로컬저장***//
-	/*GitUploader selfBackup(
+	GitUploader selfBackup(
 		_T("C:/Users/user/source/repos/GitProjectManager"),
 		_T("self"),
 		_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
@@ -77,7 +81,7 @@ BOOL CGitProjectManagerApp::InitInstance()
 		_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
 		_T("https://github.com/gmlwns0704/gitAuto"));
 	sample.addFile(_T("C:/Users/user/source/repos/HelloMFC/HelloMFC.cpp"));
-	sample.gitUpload();*/
+	sample.gitUpload();
 
 	//dataFileManager::projList.push_back(&selfBackup);
 	//dataFileManager::projList.push_back(&sample);
@@ -127,18 +131,28 @@ BOOL CGitProjectManagerApp::InitInstance()
 		nullptr);
 
 
-
-
-
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
+
+	//***initFrame 불러오기(임시)***//
+	//initFrame* iFrame = new initFrame;
+	//iFrame->Create(IDD_INIT, pFrame);
+	//iFrame->ShowWindow(SW_SHOW);
+	//iFrame->UpdateWindow();
+
+	//***newUploaderFrame 불러오기(임시)***//
+	newUploaderFrame* nUFrame = new newUploaderFrame;
+	nUFrame->Create(IDD_NEW_UPLOADER, pFrame);
+	nUFrame->ShowWindow(SW_SHOW);
+	nUFrame->UpdateWindow();
 	return TRUE;
 }
 
 int CGitProjectManagerApp::ExitInstance()
 {
 	//TODO: 추가한 추가 리소스를 처리합니다.
+	dataFileManager::saveData();
 	return CWinApp::ExitInstance();
 }
 
@@ -163,6 +177,8 @@ protected:
 // 구현입니다.
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedOk();
 };
 
 CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
@@ -183,8 +199,3 @@ void CGitProjectManagerApp::OnAppAbout()
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
-
-// CGitProjectManagerApp 메시지 처리기
-
-
-
