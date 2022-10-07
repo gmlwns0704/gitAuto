@@ -152,7 +152,10 @@ BOOL CGitProjectManagerApp::InitInstance()
 int CGitProjectManagerApp::ExitInstance()
 {
 	//TODO: 추가한 추가 리소스를 처리합니다.
-	dataFileManager::saveData();
+	CString tmp;
+	tmp.Format(_T("%d"), GitUploader::projList.GetCount());
+	MessageBox(NULL, tmp, _T("test"), NULL);
+	dataFileManager::saveData(); //자동으로 저장
 	return CWinApp::ExitInstance();
 }
 
