@@ -155,7 +155,7 @@ int CGitProjectManagerApp::ExitInstance()
 	//임시
 	CString tmp;
 	tmp.Format(_T("%d"), (int)GitUploader::projList.GetCount());
-	MessageBox(NULL, tmp, GitUploader::projList[0]->projName, NULL);
+	MessageBox(NULL, tmp, GitUploader::projList[0]->getProjName(), NULL);
 
 	dataFileManager::saveData(); //자동으로 저장
 
