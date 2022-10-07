@@ -21,7 +21,8 @@ public:
 	BOOL gitUpload(); //현재 객체의 정보를 기반으로 filePathArr에 있는 모든 파일을 업로드
 	//get함수 목록
 	CString getProjName() {
-		return projName;
+		CString tmp = projName;
+		return tmp;
 	}
 	CString getDirPath() {
 		return dirPath;
