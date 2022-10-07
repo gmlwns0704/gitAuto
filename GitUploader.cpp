@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "GitUploader.h"
 
+static CArray<GitUploader*> projList;
+
 //업로더 클래스 생성자, 하나의 프로젝트에 하나의 오브젝트
 GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) {
 	GitUploader::dirPath = dirPath; //프로젝트 디렉토리의 경로
