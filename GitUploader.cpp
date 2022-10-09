@@ -11,6 +11,7 @@ GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CS
 	GitUploader::backupRepo = backupRepo; //업로드될 깃허브의 링크
 
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
+	GitUploader::filePathArrCount = 0;
 
 	GitUploader::projList.Add(this);
 }
@@ -49,6 +50,7 @@ BOOL GitUploader::gitUpload() {
 //새로운 파일을 파일목록에 추가
 void GitUploader::addFile(CString filePath) {
 	filePathArr.Add(filePath);
+	filePathArrCount = filePathArr.GetCount();
 }
 
 GitUploader* GitUploader::getProj(CString projName) { //로드된 프로젝트 리스트에서 해당 이름의 프로젝트를 GitUploader형태로 리턴

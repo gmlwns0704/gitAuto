@@ -10,6 +10,7 @@ class GitUploader
 {
 private:
 	CStringArray filePathArr; //파일경로 배열
+	int filePathArrCount = 0;
 	CString toolPath; //개발툴 경로
 	CString projName; //프로젝트명
 	CString dirPath; //프로젝트의 디렉토리 경로
@@ -34,5 +35,13 @@ public:
 	}
 	CString getToolPath() {
 		return toolPath;
+	}
+	CString getFilePath(int n) {
+		if(n < filePathArr.GetCount())
+			return filePathArr[n];
+		return NULL;
+	}
+	int getFilePathArrCount() {
+		return filePathArrCount;
 	}
 };
