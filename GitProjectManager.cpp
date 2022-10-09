@@ -146,12 +146,7 @@ BOOL CGitProjectManagerApp::InitInstance()
 	nUFrame->Create(IDD_NEW_UPLOADER, pFrame);
 	nUFrame->ShowWindow(SW_SHOW);
 	nUFrame->UpdateWindow();
-	return TRUE;
-}
 
-int CGitProjectManagerApp::ExitInstance()
-{
-	//TODO: 추가한 추가 리소스를 처리합니다.
 	//임시
 	CString tmp;
 	tmp.Format(_T("%d"), (int)GitUploader::projList.GetCount());
@@ -160,6 +155,13 @@ int CGitProjectManagerApp::ExitInstance()
 	//***에러나는곳***//
 	/*알수없는 이유로 업로더 객체의 CString값들에 접근하면 액세스위반이 뜸, public private뭐로해도 안됨*/
 	dataFileManager::saveData(); //자동으로 저장
+
+	return TRUE;
+}
+
+int CGitProjectManagerApp::ExitInstance()
+{
+	//TODO: 추가한 추가 리소스를 처리합니다.
 
 	return CWinApp::ExitInstance();
 }
