@@ -57,23 +57,23 @@ BOOL CGitProjectManagerApp::InitInstance()
 	//Init불러오기***//
 	initFileManager::loadInit();
 	//***이 프로젝트 스스로를 깃허브에 업로드 및 프로젝트 정보를 로컬저장***//
-	GitUploader selfBackup(
-		_T("C:/Users/user/source/repos/GitProjectManager"),
-		_T("self"),
-		_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
-		_T("https://github.com/gmlwns0704/gitAuto"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/ChildView.cpp"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitProjectManager.cpp"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitUploader.cpp"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/MainFrm.cpp"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/ChildView.h"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/framework.h"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitProjectManager.h"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitUploader.h"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/MainFrm.h"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/pch.h"));
-	selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/Resource.h"));
-	selfBackup.gitUpload();
+	//GitUploader selfBackup(
+	//	_T("C:/Users/user/source/repos/GitProjectManager"),
+	//	_T("self"),
+	//	_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
+	//	_T("https://github.com/gmlwns0704/gitAuto"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/ChildView.cpp"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitProjectManager.cpp"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitUploader.cpp"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/MainFrm.cpp"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/ChildView.h"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/framework.h"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitProjectManager.h"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/GitUploader.h"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/MainFrm.h"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/pch.h"));
+	//selfBackup.addFile(_T("C:/Users/user/source/repos/GitProjectManager/Resource.h"));
+	//selfBackup.gitUpload();
 
 	//GitUploader sample(
 	//	_T("C:/Users/user/source/repos/HelloMFC"),
@@ -84,16 +84,16 @@ BOOL CGitProjectManagerApp::InitInstance()
 	//sample.gitUpload();
 
 	//***로컬 데이터파일에서 프로젝트 종류의 정보를 읽어오고 업로드***//
-	//if (!dataFileManager::loadData()) {
-	//	MessageBox(NULL, _T("GPMDataFile return FALSE"), MB_OK, MB_ICONERROR);
-	//}
-	//if (GitUploader* tmp = GitUploader::getProj(_T("self"))) {
-	//	MessageBox(NULL, _T("self is found"), MB_OK, MB_ICONINFORMATION);
-	//	tmp->gitUpload();
-	//}
-	//else {
-	//	MessageBox(NULL, _T("self is NULL"), MB_OK, MB_ICONERROR);
-	//}
+	if (!dataFileManager::loadData()) {
+		MessageBox(NULL, _T("GPMDataFile return FALSE"), MB_OK, MB_ICONERROR);
+	}
+	if (GitUploader* tmp = GitUploader::getProj(_T("self"))) {
+		MessageBox(NULL, _T("self is found"), MB_OK, MB_ICONINFORMATION);
+		tmp->gitUpload();
+	}
+	else {
+		MessageBox(NULL, _T("self is NULL"), MB_OK, MB_ICONERROR);
+	}
 	//if (GitUploader* tmp = dataFileManager::getProj(_T("sample"))) {
 	//	MessageBox(NULL, _T("sample is found"), MB_OK, MB_ICONINFORMATION);
 	//	tmp->gitUpload();
