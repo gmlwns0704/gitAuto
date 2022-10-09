@@ -27,12 +27,12 @@ public:
 		return projName;
 	}
 	CString getDirPath() {
-		return this->dirPath;
+		return dirPath;
 	}
 	CString getBackupRepo() {
-		return this->backupRepo;
+		return backupRepo;
 	}
 	CString getToolPath() {
-		return this->toolPath;
+		return toolPath;
 	}
 };
