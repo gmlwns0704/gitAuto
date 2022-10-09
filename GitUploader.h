@@ -24,7 +24,7 @@ public:
 
 	//get함수 목록
 	CString getProjName() {
-		return this->projName;
+		return projName;
 	}
 	CString getDirPath() {
 		return this->dirPath;
