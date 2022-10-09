@@ -16,6 +16,7 @@ private:
 	CString backupRepo; //프로젝트가 저장될 깃허브 주소
 public:
 	static CArray<GitUploader*> projList; //모든 프로젝트 객체들이 모여있는 목록
+	static GitUploader* getProj(CString projName); //해당 프로젝트이름을 가진 객체 찾아서 포인터 리턴
 
 	GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo); //하나의 프로젝트, 하나의 오브젝트
 	void addFile(CString filePath); //파일목록 배열에 파일 추가
