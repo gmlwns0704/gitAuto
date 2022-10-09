@@ -24,15 +24,15 @@ public:
 
 	//get함수 목록
 	CString getProjName() {
-		return projName;
+		return this->projName;
 	}
 	CString getDirPath() {
-		return dirPath;
+		return this->dirPath;
 	}
 	CString getBackupRepo() {
-		return backupRepo;
+		return this->backupRepo;
 	}
 	CString getToolPath() {
-		return toolPath;
+		return this->toolPath;
 	}
 };
