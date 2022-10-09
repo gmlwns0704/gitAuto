@@ -83,13 +83,9 @@ BOOL CGitProjectManagerApp::InitInstance()
 	//sample.addFile(_T("C:/Users/user/source/repos/HelloMFC/HelloMFC.cpp"));
 	//sample.gitUpload();
 
-	//dataFileManager::projList.push_back(&selfBackup);
-	//dataFileManager::projList.push_back(&sample);
-	//dataFileManager::saveData();
-
 	//***로컬 데이터파일에서 프로젝트 종류의 정보를 읽어오고 업로드***//
 	//dataFileManager::loadData();
-	//if (GitUploader* tmp = dataFileManager::getProj(_T("self"))) {
+	//if (GitUploader* tmp = GitUploader::getProj(_T("self"))) {
 	//	MessageBox(NULL, _T("self is found"), MB_OK, MB_ICONINFORMATION);
 	//	tmp->gitUpload();
 	//}
