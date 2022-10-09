@@ -5,14 +5,14 @@ static CArray<GitUploader*> projList;
 
 //업로더 클래스 생성자, 하나의 프로젝트에 하나의 오브젝트
 GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) {
-	GitUploader::dirPath = dirPath; //프로젝트 디렉토리의 경로
-	GitUploader::projName = projName; //프로젝트명, 깃허브에서 브랜치 이름으로 사용됨
-	GitUploader::toolPath = toolPath; //그 프로젝트에 맞는 개발툴의 경로
-	GitUploader::backupRepo = backupRepo; //업로드될 깃허브의 링크
+	this->dirPath = dirPath; //프로젝트 디렉토리의 경로
+	this->projName = projName; //프로젝트명, 깃허브에서 브랜치 이름으로 사용됨
+	this->toolPath = toolPath; //그 프로젝트에 맞는 개발툴의 경로
+	this->backupRepo = backupRepo; //업로드될 깃허브의 링크
 
-	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
+	this->filePathArr.SetSize(0); //파일리스트 기본크기 0
 
-	GitUploader::projList.Add(this);
+	this->projList.Add(this);
 }
 
 //해당 프로젝트에서 파일리스트의 파일을 업로드 - 일단 작동함!!!

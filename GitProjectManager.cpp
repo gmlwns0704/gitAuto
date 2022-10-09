@@ -158,6 +158,7 @@ int CGitProjectManagerApp::ExitInstance()
 	MessageBox(NULL, tmp, GitUploader::projList[0]->getDirPath(), NULL);
 
 	//***에러나는곳***//
+	/*알수없는 이유로 업로더 객체의 CString값들에 접근하면 액세스위반이 뜸, public private뭐로해도 안됨*/
 	dataFileManager::saveData(); //자동으로 저장
 
 	return CWinApp::ExitInstance();
