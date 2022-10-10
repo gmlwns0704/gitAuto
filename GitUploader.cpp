@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "GitUploader.h"
+#include <windows.h>
 
 static CArray<GitUploader*> projList;
 
@@ -48,9 +49,13 @@ BOOL GitUploader::gitUpload() {
 }
 
 //새로운 파일을 파일목록에 추가
-void GitUploader::addFile(CString filePath) {
+BOOL GitUploader::addFile(CString filePath) {
+	if (GitUploader::getProj(filePath) != NULL) { //해당 파일이 이미 있다면 추가 거부
+		return FALSE;
+	}
 	filePathArr.Add(filePath);
 	filePathArrCount = filePathArr.GetCount();
+	return TRUE;
 }
 
 GitUploader* GitUploader::getProj(CString projName) { //로드된 프로젝트 리스트에서 해당 이름의 프로젝트를 GitUploader형태로 리턴
@@ -60,4 +65,27 @@ GitUploader* GitUploader::getProj(CString projName) { //로드된 프로젝트 리스트에
 		}
 	}
 	return NULL;
+}
+
+BOOL GitUploader::addAllExt(CString extension) { //해당 디렉토리에서 전달받은 확장자로 이루어진 모든 파일 추가
+	WIN32_FIND_DATAW data;
+	HANDLE hFind = FindFirstFile(dirPath + _T("/*"), &data);
+	if (hFind == INVALID_HANDLE_VALUE) { //파일 찾지못함
+		CString str;
+		str.Format(_T("directory not found : %s"), dirPath);
+		MessageBox(NULL, str, _T("ERROR"), MB_ICONERROR);
+		return FALSE;
+	}
+
+	while (FindNextFile(hFind, &data) != 0) { //디렉터리 내 모든 파일들에 대해 검사
+		CString fileName = data.cFileName;
+		CString fileExt = fileName.Right(extension.GetLength()); //파일명의 확장자만 추출
+
+		if (fileExt.Compare(extension) == 0) { //확장자 비교
+			addFile(dirPath + _T("/") + fileName); //파일 추가
+		}
+	}
+
+	FindClose(hFind);
+	return TRUE;
 }

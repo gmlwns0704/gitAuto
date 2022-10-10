@@ -14,6 +14,7 @@
 #include "initFileManager.h"
 
 char* CString2charP(CString cstr);
+void CString2charP(CString cstr, char* str);
 void CString2system(CString cstr);
 
 GitUploader* GitUploaderList;

@@ -20,8 +20,9 @@ public:
 	static GitUploader* getProj(CString projName); //해당 프로젝트이름을 가진 객체 찾아서 포인터 리턴
 
 	GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo); //하나의 프로젝트, 하나의 오브젝트
-	void addFile(CString filePath); //파일목록 배열에 파일 추가
+	BOOL addFile(CString filePath); //파일목록 배열에 파일 추가
 	BOOL gitUpload(); //현재 객체의 정보를 기반으로 filePathArr에 있는 모든 파일을 업로드
+	BOOL addAllExt(CString extension);
 
 	//get함수 목록
 	CString getProjName() {
