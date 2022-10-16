@@ -4,8 +4,6 @@
 
 CArray<GitUploader*> GitUploader::projList;
 
-//***파일 날아간거 다시 복구하기***//
-
 BOOL dataFileManager::loadData() {
 	FILE* dataFile;
 	fopen_s(&dataFile, "./GPMDataFile", "r");
