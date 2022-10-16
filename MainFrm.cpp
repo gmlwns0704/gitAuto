@@ -7,6 +7,7 @@
 #include "GitProjectManager.h"
 
 #include "MainFrm.h"
+#include "newUploaderFrame.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -19,6 +20,8 @@ IMPLEMENT_DYNAMIC(CMainFrame, CFrameWnd)
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
+	ON_WM_SYSCOMMAND()
+	ON_COMMAND(NEW_PROJECT, &CMainFrame::OnProject)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -105,3 +108,24 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 	return CFrameWnd::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
 }
 
+
+
+void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CFrameWnd::OnSysCommand(nID, lParam);
+}
+
+
+void CMainFrame::OnProject()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+		//***newUploaderFrame 불러오기(임시)***//
+	CMainFrame* pFrame = this;
+	newUploaderFrame* nUFrame = new newUploaderFrame;
+	nUFrame->Create(IDD_NEW_UPLOADER, pFrame);
+	nUFrame->ShowWindow(SW_SHOW);
+	nUFrame->UpdateWindow();
+}

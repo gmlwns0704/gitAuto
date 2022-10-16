@@ -130,16 +130,6 @@ BOOL CGitProjectManagerApp::InitInstance()
 	//iFrame->ShowWindow(SW_SHOW);
 	//iFrame->UpdateWindow();
 
-	//***newUploaderFrame 불러오기(임시)***//
-	newUploaderFrame* nUFrame = new newUploaderFrame;
-	nUFrame->Create(IDD_NEW_UPLOADER, pFrame);
-	nUFrame->ShowWindow(SW_SHOW);
-	nUFrame->UpdateWindow();
-
-	//임시
-	CString tmp;
-	tmp.Format(_T("%d"), (int)GitUploader::projList.GetCount());
-
 	
 	dataFileManager::saveData(); //자동으로 저장
 
