@@ -124,12 +124,6 @@ BOOL CGitProjectManagerApp::InitInstance()
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
 
-	//***initFrame 불러오기(임시)***//
-	//initFrame* iFrame = new initFrame;
-	//iFrame->Create(IDD_INIT, pFrame);
-	//iFrame->ShowWindow(SW_SHOW);
-	//iFrame->UpdateWindow();
-
 	
 	dataFileManager::saveData(); //자동으로 저장
 

@@ -45,6 +45,7 @@ protected:
 public:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnProject();
+	afx_msg void OnInit();
 };
 
 

@@ -22,6 +22,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_SETFOCUS()
 	ON_WM_SYSCOMMAND()
 	ON_COMMAND(NEW_PROJECT, &CMainFrame::OnProject)
+	ON_COMMAND(SET_INIT, &CMainFrame::OnInit)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -128,4 +129,17 @@ void CMainFrame::OnProject()
 	nUFrame->Create(IDD_NEW_UPLOADER, pFrame);
 	nUFrame->ShowWindow(SW_SHOW);
 	nUFrame->UpdateWindow();
+}
+
+
+void CMainFrame::OnInit()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+		//***initFrame 불러오기***//
+	CMainFrame* pFrame = this;
+	initFrame* iFrame = new initFrame;
+	iFrame->Create(IDD_INIT, pFrame);
+	iFrame->ShowWindow(SW_SHOW);
+	iFrame->UpdateWindow();
 }
