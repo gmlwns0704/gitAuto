@@ -23,6 +23,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_SYSCOMMAND()
 	ON_COMMAND(NEW_PROJECT, &CMainFrame::OnProject)
 	ON_COMMAND(SET_INIT, &CMainFrame::OnInit)
+	ON_COMMAND(UPLOAD_ALL, &CMainFrame::OnAll)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -142,4 +143,16 @@ void CMainFrame::OnInit()
 	iFrame->Create(IDD_INIT, pFrame);
 	iFrame->ShowWindow(SW_SHOW);
 	iFrame->UpdateWindow();
+}
+
+
+void CMainFrame::OnAll()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	if (GitUploader::uploadAll()) {
+		MessageBox(_T("All project upload"), _T("All project upload"), MB_OK | MB_ICONINFORMATION);
+	}
+	else {
+		MessageBox(_T("warning"), _T("failed to upload project"), MB_OK | MB_ICONWARNING);
+	}
 }

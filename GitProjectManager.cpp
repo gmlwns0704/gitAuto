@@ -52,10 +52,9 @@ BOOL CGitProjectManagerApp::InitInstance()
 	CWinApp::InitInstance();
 
 
-	//***임시테스트***//
-	//******//
-	//Init불러오기***//
+	//정보불러오기
 	initFileManager::loadInit();
+	dataFileManager::loadData();
 	//***이 프로젝트 스스로를 깃허브에 업로드 및 프로젝트 정보를 로컬저장***//
 	GitUploader selfBackup(
 		_T("C:/Users/user/source/repos/GitProjectManager"),
@@ -64,7 +63,7 @@ BOOL CGitProjectManagerApp::InitInstance()
 		_T("https://github.com/gmlwns0704/gitAuto"));
 	selfBackup.addAllExt(_T(".cpp"));
 	selfBackup.addAllExt(_T(".h"));
-	selfBackup.gitUpload();
+	//selfBackup.gitUpload();
 	
 	//GitUploader sample(
 	//	_T("C:/Users/user/source/repos/HelloMFC"),
@@ -75,16 +74,16 @@ BOOL CGitProjectManagerApp::InitInstance()
 	//sample.gitUpload();
 
 	//***로컬 데이터파일에서 프로젝트 종류의 정보를 읽어오고 업로드***//
-	//if (!dataFileManager::loadData()) {
-	//	MessageBox(NULL, _T("GPMDataFile return FALSE"), MB_OK, MB_ICONERROR);
-	//}
-	//if (GitUploader* tmp = GitUploader::getProj(_T("self"))) {
-	//	MessageBox(NULL, _T("self is found"), MB_OK, MB_ICONINFORMATION);
-	//	tmp->gitUpload();
-	//}
-	//else {
-	//	MessageBox(NULL, _T("self is NULL"), MB_OK, MB_ICONERROR);
-	//}
+	if (!dataFileManager::loadData()) {
+		MessageBox(NULL, _T("GPMDataFile return FALSE"), MB_OK, MB_ICONERROR);
+	}
+	if (GitUploader* tmp = GitUploader::getProj(_T("self"))) {
+		MessageBox(NULL, _T("self is found"), MB_OK, MB_ICONINFORMATION);
+		tmp->gitUpload();
+	}
+	else {
+		MessageBox(NULL, _T("self is NULL"), MB_OK, MB_ICONERROR);
+	}
 	//if (GitUploader* tmp = dataFileManager::getProj(_T("sample"))) {
 	//	MessageBox(NULL, _T("sample is found"), MB_OK, MB_ICONINFORMATION);
 	//	tmp->gitUpload();

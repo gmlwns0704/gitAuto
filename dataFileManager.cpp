@@ -22,7 +22,7 @@ BOOL dataFileManager::loadData() {
 			dirPath,
 			toolPath,
 			backupRepo;
-		while (!strcmp(str, "//FILE_END")) { //프로젝트들의 정보 불러오기
+		while (strcmp(str, "//FILE_END")) { //프로젝트들의 정보 불러오기
 
 			fscanf_s(dataFile, "%s : %[^\n]\n", varStr, str); //한줄씩 읽어옴
 

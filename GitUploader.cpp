@@ -2,7 +2,26 @@
 #include "GitUploader.h"
 #include <windows.h>
 
+//***static***//
 static CArray<GitUploader*> projList;
+
+GitUploader* GitUploader::getProj(CString projName) { //로드된 프로젝트 리스트에서 해당 이름의 프로젝트를 GitUploader형태로 리턴
+	for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
+		if (GitUploader::projList[i]->getProjName() == projName) {
+			return GitUploader::projList[i];
+		}
+	}
+	return NULL;
+}
+
+BOOL GitUploader::uploadAll() { //모든 프로젝트 업로드
+	for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
+		GitUploader::projList[i]->gitUpload();
+	}
+	return TRUE;
+}
+
+//***not static***//
 
 //업로더 클래스 생성자, 하나의 프로젝트에 하나의 오브젝트
 GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) {
@@ -56,15 +75,6 @@ BOOL GitUploader::addFile(CString filePath) {
 	filePathArr.Add(filePath);
 	filePathArrCount = filePathArr.GetCount();
 	return TRUE;
-}
-
-GitUploader* GitUploader::getProj(CString projName) { //로드된 프로젝트 리스트에서 해당 이름의 프로젝트를 GitUploader형태로 리턴
-	for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
-		if (GitUploader::projList[i]->getProjName() == projName) {
-			return GitUploader::projList[i];
-		}
-	}
-	return NULL;
 }
 
 BOOL GitUploader::addAllExt(CString extension) { //해당 디렉토리에서 전달받은 확장자로 이루어진 모든 파일 추가
