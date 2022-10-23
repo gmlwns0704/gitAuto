@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "GitUploader.h"
-#include <windows.h>
+#include <windows.h> //cmd명령어
 
 //***static***//
 static CArray<GitUploader*> projList;
 
-GitUploader* GitUploader::getProj(CString projName) { //로드된 프로젝트 리스트에서 해당 이름의 프로젝트를 GitUploader형태로 리턴
+GitUploader* GitUploader::getProj(string projName) { //로드된 프로젝트 리스트에서 해당 이름의 프로젝트를 GitUploader형태로 리턴
 	for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
 		if (GitUploader::projList[i]->getProjName() == projName) {
 			return GitUploader::projList[i];
@@ -21,14 +21,37 @@ BOOL GitUploader::uploadAll() { //모든 프로젝트 업로드
 	return TRUE;
 }
 
-//***not static***//
+void GitUploader::infoAll() {
+	if (GitUploader::projList.GetCount() <= 0) {
+		MessageBox(NULL, _T("Project not exist"), _T("Warning"), MB_ICONWARNING);
+	}
+	else {
+		MessageBox(NULL, CString(std::to_string(GitUploader::projList.GetCount()).c_str()), _T("cnt"), NULL);
+		for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
+			GitUploader::projList[i]->Info();
+		}
+	}
+}
+
+//***none static***//
 
 //업로더 클래스 생성자, 하나의 프로젝트에 하나의 오브젝트
-GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) {
+GitUploader::GitUploader(string dirPath, string projName, string toolPath, string backupRepo) {
 	GitUploader::dirPath = dirPath; //프로젝트 디렉토리의 경로
 	GitUploader::projName = projName; //프로젝트명, 깃허브에서 브랜치 이름으로 사용됨
 	GitUploader::toolPath = toolPath; //그 프로젝트에 맞는 개발툴의 경로
 	GitUploader::backupRepo = backupRepo; //업로드될 깃허브의 링크
+
+	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
+	GitUploader::filePathArrCount = 0;
+
+	GitUploader::projList.Add(this);
+}
+GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) { //CString 입력시 생성자
+	GitUploader::dirPath = CT2CA(dirPath); //프로젝트 디렉토리의 경로
+	GitUploader::projName = CT2CA(projName); //프로젝트명, 깃허브에서 브랜치 이름으로 사용됨
+	GitUploader::toolPath = CT2CA(toolPath); //그 프로젝트에 맞는 개발툴의 경로
+	GitUploader::backupRepo = CT2CA(backupRepo); //업로드될 깃허브의 링크
 
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
 	GitUploader::filePathArrCount = 0;
@@ -56,19 +79,19 @@ BOOL GitUploader::gitUpload() {
 */
 
 	//git에 대상 파일리스트 업로드
-	CString2system(_T("cd ") + dirPath + _T(" && git init"));
-	CString2system(_T("cd ") + dirPath + _T(" && git checkout --orphan ") + projName);
+	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git init"));
+	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git checkout --orphan ") + CString(projName.c_str()));
 	for (int i = 0; i < filePathArr.GetCount(); i++) { //리스트내의 파일들 모두 add
-		CString2system(_T("cd ") + dirPath + _T(" && git add ") + filePathArr[i]);
+		CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git add ") + CString(filePathArr[i].c_str()));
 	}
-	CString2system(_T("cd ") + dirPath + _T(" && git commit -m \"autoBackup\"")); //***autoBackup대신 당시 시간 사용하기?***
-	CString2system(_T("cd ") + dirPath + _T(" && git push ") + backupRepo + _T(" ") + projName);
+	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git commit -m \"autoBackup\"")); //***autoBackup대신 당시 시간 사용하기?***
+	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git push ") + CString(backupRepo.c_str()) + _T(" ") + CString(projName.c_str()));
 
 	return true;
 }
 
 //새로운 파일을 파일목록에 추가
-BOOL GitUploader::addFile(CString filePath) {
+BOOL GitUploader::addFile(string filePath) {
 	if (GitUploader::getProj(filePath) != NULL) { //해당 파일이 이미 있다면 추가 거부
 		return FALSE;
 	}
@@ -77,25 +100,62 @@ BOOL GitUploader::addFile(CString filePath) {
 	return TRUE;
 }
 
-BOOL GitUploader::addAllExt(CString extension) { //해당 디렉토리에서 전달받은 확장자로 이루어진 모든 파일 추가
+BOOL GitUploader::addAllExt(string extension) { //해당 디렉토리에서 전달받은 확장자로 이루어진 모든 파일 추가
 	WIN32_FIND_DATAW data;
-	HANDLE hFind = FindFirstFile(dirPath + _T("/*"), &data);
+	HANDLE hFind = FindFirstFile(CString(dirPath.c_str()) + _T("/*"), &data);
 	if (hFind == INVALID_HANDLE_VALUE) { //파일 찾지못함
-		CString str;
-		str.Format(_T("directory not found : %s"), dirPath);
-		MessageBox(NULL, str, _T("ERROR"), MB_ICONERROR);
+		string str = "directory not found : " + dirPath;
+		MessageBox(NULL, CString(str.c_str()), _T("ERROR"), MB_ICONERROR);
 		return FALSE;
 	}
 
 	while (FindNextFile(hFind, &data) != 0) { //디렉터리 내 모든 파일들에 대해 검사
-		CString fileName = data.cFileName;
-		CString fileExt = fileName.Right(extension.GetLength()); //파일명의 확장자만 추출
-
-		if (fileExt.Compare(extension) == 0) { //확장자 비교
-			addFile(dirPath + _T("/") + fileName); //파일 추가
+		string fileName = CT2CA(data.cFileName);
+		string fileExt = "";
+		if (fileName.length() > extension.length()) {
+			fileExt = fileName.substr(fileName.length() - extension.length(), extension.length()); //파일명의 확장자만 추출
+			if (fileExt.compare(extension) == 0) { //확장자 비교
+				addFile(dirPath + "/" + fileName); //파일 추가
+			}
 		}
 	}
 
 	FindClose(hFind);
 	return TRUE;
+}
+
+void GitUploader::Info() {
+	string info =
+		"dirPath : " + getDirPath() +
+		"\nprojName : " + getProjName() +
+		"\ntoolPath : " + getToolPath() +
+		"\nbackupRepo : " + getBackupRepo() +
+		"\nfileList : " + std::to_string(getFilePathArrCount()) +
+		"\n";
+	for (int i = 0; i < filePathArr.GetCount(); i++) {
+		info.append(getFilePath(i) + "\n");
+	}
+	MessageBox(NULL, CString(info.c_str()), CString(projName.c_str()), NULL);
+}
+
+//get함수 목록
+string GitUploader::getProjName() {
+	return projName;
+}
+string GitUploader::getDirPath() {
+	return dirPath;
+}
+string GitUploader::getBackupRepo() {
+	return backupRepo;
+}
+string GitUploader::getToolPath() {
+	return toolPath;
+}
+string GitUploader::getFilePath(int n) {
+	if (n < filePathArr.GetCount())
+		return filePathArr.GetAt(n);
+	return NULL;
+}
+int GitUploader::getFilePathArrCount() {
+	return filePathArrCount;
 }
