@@ -13,8 +13,13 @@
 #include "dataFileManager.h"
 #include "initFileManager.h"
 
+#include <string>
+
 char* CString2charP(CString cstr);
+char* CString2charP(string cstr);
 void CString2charP(CString cstr, char* str);
+void CString2charP(string cstr, char* str);
+
 void CString2system(CString cstr);
 
 GitUploader* GitUploaderList;

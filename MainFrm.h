@@ -47,6 +47,14 @@ public:
 	afx_msg void OnProject();
 	afx_msg void OnInit();
 	afx_msg void OnAll();
+	afx_msg void OnBackup();
+	afx_msg void OnInfo();
+	afx_msg void OnSaveAll();
+	afx_msg void OnLoadProject();
+	afx_msg void OnNewProject();
+	afx_msg void OnSelfBackup();
+	afx_msg void OnSetInit();
+	afx_msg void OnUploadAll();
 };
 
 

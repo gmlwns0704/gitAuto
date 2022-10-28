@@ -55,42 +55,6 @@ BOOL CGitProjectManagerApp::InitInstance()
 	//정보불러오기
 	initFileManager::loadInit();
 	dataFileManager::loadData();
-	//***이 프로젝트 스스로를 깃허브에 업로드 및 프로젝트 정보를 로컬저장***//
-	GitUploader selfBackup(
-		_T("C:/Users/user/source/repos/GitProjectManager"),
-		_T("self"),
-		_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
-		_T("https://github.com/gmlwns0704/gitAuto"));
-	selfBackup.addAllExt(_T(".cpp"));
-	selfBackup.addAllExt(_T(".h"));
-	//selfBackup.gitUpload();
-	
-	//GitUploader sample(
-	//	_T("C:/Users/user/source/repos/HelloMFC"),
-	//	_T("sample"),
-	//	_T("C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe"),
-	//	_T("https://github.com/gmlwns0704/gitAuto"));
-	//sample.addFile(_T("C:/Users/user/source/repos/HelloMFC/HelloMFC.cpp"));
-	//sample.gitUpload();
-
-	//***로컬 데이터파일에서 프로젝트 종류의 정보를 읽어오고 업로드***//
-	if (!dataFileManager::loadData()) {
-		MessageBox(NULL, _T("GPMDataFile return FALSE"), MB_OK, MB_ICONERROR);
-	}
-	if (GitUploader* tmp = GitUploader::getProj(_T("self"))) {
-		MessageBox(NULL, _T("self is found"), MB_OK, MB_ICONINFORMATION);
-		tmp->gitUpload();
-	}
-	else {
-		MessageBox(NULL, _T("self is NULL"), MB_OK, MB_ICONERROR);
-	}
-	//if (GitUploader* tmp = dataFileManager::getProj(_T("sample"))) {
-	//	MessageBox(NULL, _T("sample is found"), MB_OK, MB_ICONINFORMATION);
-	//	tmp->gitUpload();
-	//}
-	//else {
-	//	MessageBox(NULL, _T("sample is NULL"), MB_OK, MB_ICONERROR);
-	//}
 	
 	EnableTaskbarInteraction(FALSE);
 
@@ -122,9 +86,6 @@ BOOL CGitProjectManagerApp::InitInstance()
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
-
-	
-	dataFileManager::saveData(); //자동으로 저장
 
 	return TRUE;
 }

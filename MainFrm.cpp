@@ -9,6 +9,9 @@
 #include "MainFrm.h"
 #include "newUploaderFrame.h"
 
+#include "dataFileManager.h"
+#include "GitUploader.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -21,9 +24,13 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
 	ON_WM_SYSCOMMAND()
-	ON_COMMAND(NEW_PROJECT, &CMainFrame::OnProject)
-	ON_COMMAND(SET_INIT, &CMainFrame::OnInit)
-	ON_COMMAND(UPLOAD_ALL, &CMainFrame::OnAll)
+	ON_COMMAND(ID_SAVE_ALL, &CMainFrame::OnSaveAll)
+	ON_COMMAND(ID_INFO, &CMainFrame::OnInfo)
+	ON_COMMAND(ID_LOAD_PROJECT, &CMainFrame::OnLoadProject)
+	ON_COMMAND(ID_NEW_PROJECT, &CMainFrame::OnNewProject)
+	ON_COMMAND(ID_SELF_BACKUP, &CMainFrame::OnSelfBackup)
+	ON_COMMAND(ID_SET_INIT, &CMainFrame::OnSetInit)
+	ON_COMMAND(ID_UPLOAD_ALL, &CMainFrame::OnUploadAll)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -120,11 +127,35 @@ void CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 }
 
 
-void CMainFrame::OnProject()
+void CMainFrame::OnInfo()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	GitUploader::infoAll();
+}
 
-		//***newUploaderFrame 불러오기(임시)***//
+//***여기서 GitUploader객체의 변수에 접근시 접근위반뜨고 뻗음, 원인해결방법 찾기***//
+void CMainFrame::OnSaveAll()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	if (!dataFileManager::saveData()) {
+		MessageBox(_T("failed to save GPMDataFile"), _T("warning"));
+	}
+}
+
+
+void CMainFrame::OnLoadProject()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	if (!dataFileManager::loadData()) {
+		MessageBox(_T("failed to load GPMDataFile"), _T("warning"));
+	}
+}
+
+
+void CMainFrame::OnNewProject()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	//***newUploaderFrame 불러오기***//
 	CMainFrame* pFrame = this;
 	newUploaderFrame* nUFrame = new newUploaderFrame;
 	nUFrame->Create(IDD_NEW_UPLOADER, pFrame);
@@ -133,11 +164,26 @@ void CMainFrame::OnProject()
 }
 
 
-void CMainFrame::OnInit()
+void CMainFrame::OnSelfBackup()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	//***이 프로젝트 스스로를 깃허브에 업로드 및 프로젝트 정보를 로컬저장***//
+	GitUploader *selfBackup = new GitUploader(
+		"C:/Users/user/source/repos/GitProjectManager",
+		"self",
+		"C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/devenv.exe",
+		"https://github.com/gmlwns0704/gitAuto");
+	selfBackup->addAllExt(".cpp");
+	selfBackup->addAllExt(".h");
 
-		//***initFrame 불러오기***//
+	selfBackup->Info();
+}
+
+
+void CMainFrame::OnSetInit()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+	//***initFrame 불러오기***//
 	CMainFrame* pFrame = this;
 	initFrame* iFrame = new initFrame;
 	iFrame->Create(IDD_INIT, pFrame);
@@ -146,7 +192,7 @@ void CMainFrame::OnInit()
 }
 
 
-void CMainFrame::OnAll()
+void CMainFrame::OnUploadAll()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
 	if (GitUploader::uploadAll()) {

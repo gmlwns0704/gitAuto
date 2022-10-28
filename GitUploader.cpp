@@ -21,12 +21,12 @@ BOOL GitUploader::uploadAll() { //모든 프로젝트 업로드
 	return TRUE;
 }
 
-void GitUploader::infoAll() {
-	if (GitUploader::projList.GetCount() <= 0) {
+void GitUploader::infoAll() { //존재하는 모든 프로젝트에게 info()실행
+	if (GitUploader::projList.GetCount() <= 0) { //프로젝트가 없음
 		MessageBox(NULL, _T("Project not exist"), _T("Warning"), MB_ICONWARNING);
 	}
-	else {
-		MessageBox(NULL, CString(std::to_string(GitUploader::projList.GetCount()).c_str()), _T("cnt"), NULL);
+	else { //프로젝트 존재
+		TRACE("project cnt : %d", GitUploader::projList.GetCount());
 		for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
 			GitUploader::projList[i]->Info();
 		}
@@ -45,8 +45,13 @@ GitUploader::GitUploader(string dirPath, string projName, string toolPath, strin
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
 	GitUploader::filePathArrCount = 0;
 
-	GitUploader::projList.Add(this);
+	if (GitUploader::getProj(projName) != NULL) {
+		MessageBox(NULL, _T("project name duplicated"), CString(projName.c_str()), MB_ICONWARNING);
+	}
+	else
+		GitUploader::projList.Add(this);
 }
+//생성자 CString버전
 GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) { //CString 입력시 생성자
 	GitUploader::dirPath = CT2CA(dirPath); //프로젝트 디렉토리의 경로
 	GitUploader::projName = CT2CA(projName); //프로젝트명, 깃허브에서 브랜치 이름으로 사용됨
@@ -124,17 +129,19 @@ BOOL GitUploader::addAllExt(string extension) { //해당 디렉토리에서 전달받은 확�
 	return TRUE;
 }
 
-void GitUploader::Info() {
-	string info =
-		"dirPath : " + getDirPath() +
-		"\nprojName : " + getProjName() +
-		"\ntoolPath : " + getToolPath() +
-		"\nbackupRepo : " + getBackupRepo() +
-		"\nfileList : " + std::to_string(getFilePathArrCount()) +
-		"\n";
+void GitUploader::Info() {//해당 프로젝트 정보 출력
+
+	string info;
+	info.append("dirPath : " + getDirPath());
+	info.append("\nprojName : " + getProjName());
+	info.append("\ntoolPath : " + getToolPath());
+	info.append("\nbackupRepo : " + getBackupRepo());
+	info.append("\nfileList : " + std::to_string((getFilePathArrCount())) + "\n");
+
 	for (int i = 0; i < filePathArr.GetCount(); i++) {
 		info.append(getFilePath(i) + "\n");
 	}
+
 	MessageBox(NULL, CString(info.c_str()), CString(projName.c_str()), NULL);
 }
 
