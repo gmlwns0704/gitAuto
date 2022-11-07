@@ -15,7 +15,7 @@ protected:
 
 // 특성입니다.
 public:
-
+	NOTIFYICONDATA nid;
 // 작업입니다.
 public:
 
@@ -55,6 +55,9 @@ public:
 	afx_msg void OnSelfBackup();
 	afx_msg void OnSetInit();
 	afx_msg void OnUploadAll();
+	afx_msg void OnClose();
+	afx_msg LRESULT OnTaryNotification(WPARAM, LPARAM);
+	afx_msg void OnHide();
 };
 
 

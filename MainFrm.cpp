@@ -16,6 +16,8 @@
 #define new DEBUG_NEW
 #endif
 
+#define WM_TRAY_NOTIFICATION (WM_APP + 1)
+
 // CMainFrame
 
 IMPLEMENT_DYNAMIC(CMainFrame, CFrameWnd)
@@ -31,6 +33,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_SELF_BACKUP, &CMainFrame::OnSelfBackup)
 	ON_COMMAND(ID_SET_INIT, &CMainFrame::OnSetInit)
 	ON_COMMAND(ID_UPLOAD_ALL, &CMainFrame::OnUploadAll)
+	ON_MESSAGE(WM_TRAY_NOTIFICATION, OnTaryNotification)
+	ON_WM_CLOSE()
+	ON_COMMAND(ID_HIDE, &CMainFrame::OnHide)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -201,4 +206,43 @@ void CMainFrame::OnUploadAll()
 	else {
 		MessageBox(_T("warning"), _T("failed to upload project"), MB_OK | MB_ICONWARNING);
 	}
+}
+
+
+
+void CMainFrame::OnClose()
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	CFrameWnd::OnClose();
+}
+
+//트레이아이콘 클릭
+LRESULT CMainFrame::OnTaryNotification(WPARAM wParam, LPARAM lParam) {
+	if (lParam == WM_LBUTTONDBLCLK) {
+		CFrameWnd::ActivateFrame(SW_SHOW);
+		::Shell_NotifyIcon(NIM_DELETE, &nid);
+	}
+
+	return 0;
+}
+
+//프레임 숨기기
+void CMainFrame::OnHide()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	ZeroMemory(&nid, sizeof(nid));
+	nid.cbSize = sizeof(NOTIFYICONDATA);
+	nid.uID = 0; // 트레이 구조체 아이디.
+	nid.uFlags = NIF_ICON | NIF_TIP | NIF_MESSAGE;
+	nid.hWnd = m_hWnd;
+	nid.hIcon = AfxGetApp()->LoadIconW(IDR_MAINFRAME);
+	lstrcpy(nid.szTip, _T("Git Auto Uploader"));
+
+	nid.uCallbackMessage = WM_TRAY_NOTIFICATION;
+	
+	CFrameWnd::ActivateFrame(SW_HIDE);
+
+	::Shell_NotifyIcon(NIM_ADD, &nid);
 }

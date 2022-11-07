@@ -138,6 +138,13 @@ void GitUploader::Info() {//해당 프로젝트 정보 출력
 	info.append("\nbackupRepo : " + getBackupRepo());
 	info.append("\nfileList : " + std::to_string((getFilePathArrCount())) + "\n");
 
+	//string info =
+	//"dirPath : " + getDirPath() +
+	//"\nprojName : " + getProjName() +
+	//"\ntoolPath : " + getToolPath() +
+	//"\nbackupRepo : " + getBackupRepo() +
+	//"\nfileList : " + std::to_string((getFilePathArrCount())) + "\n";
+
 	for (int i = 0; i < filePathArr.GetCount(); i++) {
 		info.append(getFilePath(i) + "\n");
 	}
