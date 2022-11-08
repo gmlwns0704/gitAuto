@@ -16,6 +16,7 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+#include "projListFrame.h"
 
 #define WM_TRAY_NOTIFICATION (WM_APP + 1)
 
@@ -153,9 +154,11 @@ void CMainFrame::OnSaveAll()
 void CMainFrame::OnLoadProject()
 {
 	// TODO: 여기에 명령 처리기 코드를 추가합니다.
-	if (!dataFileManager::loadData()) {
-		MessageBox(_T("failed to load GPMDataFile"), _T("warning"));
-	}
+	CMainFrame* pFrame = this;
+	projListFrame* nUFrame = new projListFrame;
+	nUFrame->Create(IDD_UPLOADER_LIST, pFrame);
+	nUFrame->ShowWindow(SW_SHOW);
+	nUFrame->UpdateWindow();
 }
 
 
