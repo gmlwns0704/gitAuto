@@ -58,6 +58,7 @@ public:
 	afx_msg void OnClose();
 	afx_msg LRESULT OnTaryNotification(WPARAM, LPARAM);
 	afx_msg void OnHide();
+	afx_msg void OnSelfEdit();
 };
 
 

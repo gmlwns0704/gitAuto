@@ -8,6 +8,7 @@
 
 #include "MainFrm.h"
 #include "newUploaderFrame.h"
+#include "projEditorFrame.h"
 
 #include "dataFileManager.h"
 #include "GitUploader.h"
@@ -36,6 +37,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_MESSAGE(WM_TRAY_NOTIFICATION, OnTaryNotification)
 	ON_WM_CLOSE()
 	ON_COMMAND(ID_HIDE, &CMainFrame::OnHide)
+	ON_COMMAND(ID_SELF_EDIT, &CMainFrame::OnSelfEdit)
 END_MESSAGE_MAP()
 
 // CMainFrame 생성/소멸
@@ -245,4 +247,16 @@ void CMainFrame::OnHide()
 	CFrameWnd::ActivateFrame(SW_HIDE);
 
 	::Shell_NotifyIcon(NIM_ADD, &nid);
+}
+
+
+void CMainFrame::OnSelfEdit()
+{
+	// TODO: 여기에 명령 처리기 코드를 추가합니다.
+
+	CMainFrame* pFrame = this;
+	projEditorFrame* nUFrame = new projEditorFrame(GitUploader::getProj("self"));
+	nUFrame->Create(IDD_EDIT_UPLOADER, pFrame);
+	nUFrame->ShowWindow(SW_SHOW);
+	nUFrame->UpdateWindow();
 }

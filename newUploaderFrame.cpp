@@ -82,16 +82,16 @@ void newUploaderFrame::OnBnClickedButtonProjDirFind()
 
 	//출처 : https://psmkr0225.tistory.com/192
 	BROWSEINFO BrInfo;
-	TCHAR szBuffer[512];                                      // 경로저장 버퍼 
+	TCHAR szBuffer[512]; // 경로저장 버퍼 
 
 	::ZeroMemory(&BrInfo, sizeof(BROWSEINFO));
 	::ZeroMemory(szBuffer, 512);
 
 	BrInfo.hwndOwner = GetSafeHwnd();
-	BrInfo.lpszTitle = _T("파일이 저장될 폴더를 선택하세요");
+	BrInfo.lpszTitle = _T("프로젝트 폴더 선택");
 	BrInfo.ulFlags = BIF_NEWDIALOGSTYLE | BIF_EDITBOX | BIF_RETURNONLYFSDIRS;
 	LPITEMIDLIST pItemIdList = ::SHBrowseForFolder(&BrInfo);
-	::SHGetPathFromIDList(pItemIdList, szBuffer);               // 파일경로 읽어오기
+	::SHGetPathFromIDList(pItemIdList, szBuffer); // 파일경로 읽어오기
 
 	// 경로를 가져와 사용할 경우, Edit Control 에 값 저장
 	CString str;

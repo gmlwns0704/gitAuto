@@ -13,6 +13,9 @@ GitUploader* GitUploader::getProj(string projName) { //로드된 프로젝트 리스트에�
 	}
 	return NULL;
 }
+GitUploader* GitUploader::getProj(CString projName) {
+	return GitUploader::getProj((string)CT2CA(projName));
+}
 
 BOOL GitUploader::uploadAll() { //모든 프로젝트 업로드
 	for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
@@ -61,7 +64,11 @@ GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CS
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
 	GitUploader::filePathArrCount = 0;
 
-	GitUploader::projList.Add(this);
+	if (GitUploader::getProj((string)CT2CA(projName)) != NULL) {
+		MessageBox(NULL, _T("project name duplicated"), projName, MB_ICONWARNING);
+	}
+	else
+		GitUploader::projList.Add(this);
 }
 
 //해당 프로젝트에서 파일리스트의 파일을 업로드 - 일단 작동함!!!
@@ -97,12 +104,33 @@ BOOL GitUploader::gitUpload() {
 
 //새로운 파일을 파일목록에 추가
 BOOL GitUploader::addFile(string filePath) {
+	TRACE("addFile : %s\n", filePath);
 	if (GitUploader::getProj(filePath) != NULL) { //해당 파일이 이미 있다면 추가 거부
 		return FALSE;
 	}
 	filePathArr.Add(filePath);
 	filePathArrCount = filePathArr.GetCount();
 	return TRUE;
+}
+BOOL GitUploader::addFile(CString filePath) {
+	return addFile((string)CT2CA(filePath));
+}
+
+BOOL GitUploader::rmFile(string filePath) {
+	//MessageBox(NULL, (CString)filePath.c_str(), _T("HELLO"), NULL);
+
+	for (int i = 0; i < filePathArrCount; i++) {
+		TRACE("%s %s\n", filePath, filePathArr.GetAt(i));
+		if (filePath.compare(filePathArr.GetAt(i)) == 0) {
+			filePathArr.RemoveAt(i);
+			filePathArrCount--;
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+BOOL GitUploader::rmFile(CString filePath) {
+	return rmFile((string)CT2CA(filePath));
 }
 
 BOOL GitUploader::addAllExt(string extension) { //해당 디렉토리에서 전달받은 확장자로 이루어진 모든 파일 추가
@@ -127,6 +155,9 @@ BOOL GitUploader::addAllExt(string extension) { //해당 디렉토리에서 전달받은 확�
 
 	FindClose(hFind);
 	return TRUE;
+}
+BOOL GitUploader::addAllExt(CString extension) {
+	return addAllExt((string)CT2CA(extension));
 }
 
 void GitUploader::Info() {//해당 프로젝트 정보 출력
