@@ -5,6 +5,7 @@
 #include "GitProjectManager.h"
 #include "afxdialogex.h"
 #include "newUploaderFrame.h"
+#include "projEditorFrame.h"
 
 
 // newUploaderFrame 대화 상자
@@ -55,11 +56,16 @@ void newUploaderFrame::OnBnClickedOk()
 		MessageBox(_T("해당 이름의 프로젝트가 이미 존재합니다"), _T("warning"), MB_ICONWARNING);
 		return;
 	}
-	GitUploader(projDir, projName, _T(""), gitURL);
+	GitUploader* newObj =  new GitUploader(projDir, projName, _T(""), gitURL);
 
 	CDialogEx::OnOK();
 
 	DestroyWindow();
+
+	projEditorFrame* nUFrame = new projEditorFrame(newObj);
+	nUFrame->Create(IDD_EDIT_UPLOADER);
+	nUFrame->ShowWindow(SW_SHOW);
+	nUFrame->UpdateWindow();
 }
 
 
