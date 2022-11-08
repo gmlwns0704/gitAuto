@@ -39,10 +39,10 @@ void GitUploader::infoAll() { //존재하는 모든 프로젝트에게 info()실행
 //***none static***//
 
 //업로더 클래스 생성자, 하나의 프로젝트에 하나의 오브젝트
-GitUploader::GitUploader(string dirPath, string projName, string toolPath, string backupRepo) {
+GitUploader::GitUploader(string dirPath, string projName, string branch, string backupRepo) {
 	GitUploader::dirPath = dirPath; //프로젝트 디렉토리의 경로
 	GitUploader::projName = projName; //프로젝트명, 깃허브에서 브랜치 이름으로 사용됨
-	GitUploader::toolPath = toolPath; //그 프로젝트에 맞는 개발툴의 경로
+	GitUploader::branch = branch; //그 프로젝트에 맞는 개발툴의 경로
 	GitUploader::backupRepo = backupRepo; //업로드될 깃허브의 링크
 
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
@@ -55,10 +55,10 @@ GitUploader::GitUploader(string dirPath, string projName, string toolPath, strin
 		GitUploader::projList.Add(this);
 }
 //생성자 CString버전
-GitUploader::GitUploader(CString dirPath, CString projName, CString toolPath, CString backupRepo) { //CString 입력시 생성자
+GitUploader::GitUploader(CString dirPath, CString projName, CString branch, CString backupRepo) { //CString 입력시 생성자
 	GitUploader::dirPath = CT2CA(dirPath); //프로젝트 디렉토리의 경로
 	GitUploader::projName = CT2CA(projName); //프로젝트명, 깃허브에서 브랜치 이름으로 사용됨
-	GitUploader::toolPath = CT2CA(toolPath); //그 프로젝트에 맞는 개발툴의 경로
+	GitUploader::branch = CT2CA(branch); //그 프로젝트에 맞는 개발툴의 경로
 	GitUploader::backupRepo = CT2CA(backupRepo); //업로드될 깃허브의 링크
 
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
@@ -92,12 +92,12 @@ BOOL GitUploader::gitUpload() {
 
 	//git에 대상 파일리스트 업로드
 	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git init"));
-	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git checkout --orphan ") + CString(projName.c_str()));
+	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git checkout --orphan ") + CString(branch.c_str()));
 	for (int i = 0; i < filePathArr.GetCount(); i++) { //리스트내의 파일들 모두 add
 		CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git add ") + CString(filePathArr[i].c_str()));
 	}
 	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git commit -m \"autoBackup\"")); //***autoBackup대신 당시 시간 사용하기?***
-	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git push ") + CString(backupRepo.c_str()) + _T(" ") + CString(projName.c_str()));
+	CString2system(_T("cd ") + CString(dirPath.c_str()) + _T(" && git push ") + CString(backupRepo.c_str()) + _T(" ") + CString(branch.c_str()));
 
 	return true;
 }
@@ -165,14 +165,14 @@ void GitUploader::Info() {//해당 프로젝트 정보 출력
 	string info;
 	info.append("dirPath : " + getDirPath());
 	info.append("\nprojName : " + getProjName());
-	info.append("\ntoolPath : " + getToolPath());
+	info.append("\nbranch : " + getBranch());
 	info.append("\nbackupRepo : " + getBackupRepo());
 	info.append("\nfileList : " + std::to_string((getFilePathArrCount())) + "\n");
 
 	//string info =
 	//"dirPath : " + getDirPath() +
 	//"\nprojName : " + getProjName() +
-	//"\ntoolPath : " + getToolPath() +
+	//"\nbranch : " + getBranch() +
 	//"\nbackupRepo : " + getBackupRepo() +
 	//"\nfileList : " + std::to_string((getFilePathArrCount())) + "\n";
 
@@ -193,8 +193,8 @@ string GitUploader::getDirPath() {
 string GitUploader::getBackupRepo() {
 	return backupRepo;
 }
-string GitUploader::getToolPath() {
-	return toolPath;
+string GitUploader::getBranch() {
+	return branch;
 }
 string GitUploader::getFilePath(int n) {
 	if (n < filePathArr.GetCount())

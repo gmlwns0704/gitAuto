@@ -94,7 +94,7 @@ BOOL dataFileManager::saveData() {
 		CString2charP(objTmp->getDirPath(), str);
 		fprintf_s(dataFile, "dirPath : %s\n", str);
 
-		CString2charP(objTmp->getToolPath(), str);
+		CString2charP(objTmp->getBranch(), str);
 		fprintf_s(dataFile, "toolPath : %s\n", str);
 
 		CString2charP(objTmp->getBackupRepo(), str);

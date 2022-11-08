@@ -40,15 +40,20 @@ END_MESSAGE_MAP()
 void newUploaderFrame::OnBnClickedOk()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
-	CString projName, projDir, gitURL;
+	CString projName, branch, projDir, gitURL;
 	GetDlgItemTextW(IDC_EDIT_PROJNAME, projName);
+	GetDlgItemTextW(IDC_EDIT_BRANCH, branch);
 	GetDlgItemTextW(IDC_EDIT_PROJDIR, projDir);
 	GetDlgItemTextW(IDC_EDIT_GIT_URL, gitURL);
 	if (projName == "") {
 		MessageBox(_T("프로젝트 이름을 입력하시오"), _T("warning"), MB_ICONWARNING);
 		return;
 	}
-	if (projDir== "") {
+	if (branch== "") {
+		MessageBox(_T("프로젝트 브랜치를 입력하시오"), _T("warning"), MB_ICONWARNING);
+		return;
+	}
+	if (projDir == "") {
 		MessageBox(_T("프로젝트 경로를 입력하시오"), _T("warning"), MB_ICONWARNING);
 		return;
 	}
@@ -74,7 +79,7 @@ BOOL newUploaderFrame::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  여기에 추가 초기화 작업을 추가합니다.
-
+	GetDlgItem(IDC_EDIT_BRANCH)->SetWindowTextW(_T("main"));
 	GetDlgItem(IDC_EDIT_GIT_URL)->SetWindowTextW(initFileManager::defaultBackupURL);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
