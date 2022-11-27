@@ -50,11 +50,6 @@ CGitProjectManagerApp theApp;
 BOOL CGitProjectManagerApp::InitInstance()
 {
 	CWinApp::InitInstance();
-
-
-	//정보불러오기
-	initFileManager::loadInit();
-	dataFileManager::loadData();
 	
 	EnableTaskbarInteraction(FALSE);
 
@@ -86,6 +81,12 @@ BOOL CGitProjectManagerApp::InitInstance()
 	// 창 하나만 초기화되었으므로 이를 표시하고 업데이트합니다.
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
+
+	//정보불러오기
+	initFileManager::loadInit();
+	dataFileManager::loadData();
+	//자동업로드 스레드시작
+	GitUploader::initThread();
 
 	return TRUE;
 }

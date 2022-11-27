@@ -6,7 +6,9 @@
 //#include <fstream>
 //#include <iostream>
 #include<string>
+#include <thread>
 typedef std::string string;
+typedef std::thread thread;
 
 class GitUploader
 {
@@ -17,8 +19,14 @@ private:
 	string projName; //프로젝트명
 	string dirPath; //프로젝트의 디렉토리 경로
 	string backupRepo; //프로젝트가 저장될 깃허브 주소
+
+	
+	CTime lastModified;
+	
 public:
 	static CArray<GitUploader*> projList; //모든 프로젝트 객체들이 모여있는 목록
+	static BOOL continueThread;
+	static int threadCoolTime;
 	static GitUploader* getProj(string  projName); //해당 프로젝트이름을 가진 객체 찾아서 포인터 리턴
 	static GitUploader* getProj(CString  projName);
 	static BOOL uploadAll();
@@ -34,6 +42,9 @@ public:
 	BOOL addAllExt(string  extension);
 	BOOL addAllExt(CString  extension);
 	void Info();
+
+	static void autoUploadThread();
+	static void initThread();
 
 	string getProjName();
 	string getDirPath();

@@ -4,6 +4,8 @@
 
 //***static***//
 static CArray<GitUploader*> projList;
+BOOL GitUploader::continueThread = TRUE;
+int GitUploader::threadCoolTime = 5000;
 
 GitUploader* GitUploader::getProj(string projName) { //로드된 프로젝트 리스트에서 해당 이름의 프로젝트를 GitUploader형태로 리턴
 	for (int i = 0; i < GitUploader::projList.GetCount(); i++) {
@@ -36,6 +38,64 @@ void GitUploader::infoAll() { //존재하는 모든 프로젝트에게 info()실행
 	}
 }
 
+void GitUploader::autoUploadThread() {
+	int loopCount = 0;
+	while (continueThread) {
+		loopCount++;
+		CString loopCntMsg;
+		loopCntMsg.Format(_T("loop : %d : "), loopCount);
+		TRACE(loopCntMsg);
+		for (int i = 0; i < projList.GetCount(); i++) {
+			GitUploader* targetProj = projList.GetAt(i);
+			BOOL isModified = FALSE;
+			for (int j = 0; j < targetProj->getFilePathArrCount(); j++) {
+				//출처 : https://2ry53.tistory.com/138
+				string targetFile = targetProj->getFilePath(j);
+				TRACE(loopCntMsg + (CString)targetFile.c_str() + _T("\n"));
+				HANDLE h_File = CreateFile((CString)targetFile.c_str(),
+					GENERIC_READ,
+					FILE_SHARE_READ | FILE_SHARE_WRITE,
+					NULL,
+					OPEN_EXISTING,
+					FILE_ATTRIBUTE_NORMAL,
+					NULL);
+				if (h_File != INVALID_HANDLE_VALUE) {
+					FILETIME
+						creTime, //안쓰임
+						accTime, //안쓰임
+						wrtTime;
+					GetFileTime(h_File, &creTime, &accTime, &wrtTime);
+					SYSTEMTIME
+						wrtSysTime,
+						wrtLocalTime; //시스템시간 변환
+					FileTimeToSystemTime(&wrtTime, &wrtSysTime);
+					SystemTimeToTzSpecificLocalTime(NULL, &wrtSysTime, &wrtLocalTime);
+
+					CTime modifiedTIme(wrtLocalTime); //마지막 수정시간
+					TRACE(loopCntMsg + targetProj->lastModified.Format("%Y %m %d %H %M %S") + _T(" vs ") + modifiedTIme.Format("%Y %m %d %H %M %S\n"));
+					if (targetProj->lastModified < modifiedTIme) { //하나의 파일이라도 수정시간이 바뀌었다면
+						isModified = TRUE;
+						targetProj->lastModified = modifiedTIme;
+					}
+				}
+				//close handle
+				CloseHandle(h_File);
+			}
+			if (isModified) { //수정됐다면 프로젝트 업로드함
+				TRACE(loopCntMsg + _T(" upload\n"));
+				targetProj->gitUpload();
+			}
+		}
+		
+		Sleep(threadCoolTime);
+	}
+}
+
+void GitUploader::initThread() {
+	thread t = thread(autoUploadThread);
+	t.detach();
+}
+
 //***none static***//
 
 //업로더 클래스 생성자, 하나의 프로젝트에 하나의 오브젝트
@@ -47,6 +107,7 @@ GitUploader::GitUploader(string dirPath, string projName, string branch, string 
 
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
 	GitUploader::filePathArrCount = 0;
+	GitUploader::lastModified = CTime::GetCurrentTime();
 
 	if (GitUploader::getProj(projName) != NULL) {
 		MessageBox(NULL, _T("project name duplicated"), CString(projName.c_str()), MB_ICONWARNING);
@@ -63,6 +124,7 @@ GitUploader::GitUploader(CString dirPath, CString projName, CString branch, CStr
 
 	GitUploader::filePathArr.SetSize(0); //파일리스트 기본크기 0
 	GitUploader::filePathArrCount = 0;
+	GitUploader::lastModified = CTime::GetCurrentTime();
 
 	if (GitUploader::getProj((string)CT2CA(projName)) != NULL) {
 		MessageBox(NULL, _T("project name duplicated"), projName, MB_ICONWARNING);
@@ -188,6 +250,7 @@ void GitUploader::Info() {//해당 프로젝트 정보 출력
 
 	MessageBox(NULL, CString(info.c_str()), CString(projName.c_str()), NULL);
 }
+
 
 //get함수 목록
 string GitUploader::getProjName() {
